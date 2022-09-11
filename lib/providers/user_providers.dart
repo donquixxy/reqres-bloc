@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_application_1/models/user_models.dart';
 
@@ -17,12 +19,19 @@ class UserProvider {
     try {
       List<UserModels> temp = [];
       var response = await dio.get(baseUrl);
-      for (var data in response.data['data']) {
-        temp.add(data);
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to fetch Data');
       }
+
+      for (var data in response.data['data']) {
+        UserModels models = UserModels.fromJson(data);
+        temp.add(models);
+      }
+
       return temp;
-    } catch (error) {
-      return null;
+    } catch (e) {
+      // TODO
     }
   }
 }

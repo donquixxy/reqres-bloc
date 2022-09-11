@@ -12,3 +12,5 @@ class UsersLoaded extends UsersState {
 
   UsersLoaded({this.userModels = const <UserModels>[]});
 }
+
+class UserLoading extends UsersState {}
