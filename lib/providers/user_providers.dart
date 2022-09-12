@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
-import 'package:flutter_application_1/models/user_models.dart';
+import 'package:flutter_application_1/models/user_data_models.dart';
 
 class UserProvider {
   UserProvider._instance();
@@ -13,25 +11,26 @@ class UserProvider {
   }
 
   Dio dio = Dio();
-  final String baseUrl = 'https://reqres.in/api/users?page=2';
+  final String baseUrl = 'https://reqres.in/api/users';
 
-  Future<List<UserModels>?> getAllUsers() async {
+  Future<UsersPage?> getAllUsers(int page) async {
     try {
-      List<UserModels> temp = [];
-      var response = await dio.get(baseUrl);
+      var response = await dio.get(baseUrl, queryParameters: {'page': page});
 
       if (response.statusCode != 200) {
         throw Exception('Failed to fetch Data');
       }
 
-      for (var data in response.data['data']) {
-        UserModels models = UserModels.fromJson(data);
-        temp.add(models);
-      }
+      return UsersPage.fromJson(response.data);
 
-      return temp;
+      // for (var data in response.data['data']) {
+      //   UserModels models = UserModels.fromJson(data);
+      //   temp.add(models);
+      // }
+
+      // return temp;
     } catch (e) {
-      // TODO
+      return null;
     }
   }
 }
