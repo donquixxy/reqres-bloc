@@ -4,7 +4,7 @@ import 'package:flutter_application_1/body.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => UsersBloc()..add(LoadUser()),
-      child: MaterialApp(
+      child: const MaterialApp(
         home: MyBodyApp(),
       ),
     );
