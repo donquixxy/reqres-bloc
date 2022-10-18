@@ -12,17 +12,28 @@ class LoadUser extends UsersEvent {
       var response = await _repository.getAllUser(pageCounter);
       pageCounter = pageCounter + 1;
 
-      for (var data in response!.data) {
+      for (var data in response.right.data) {
         temp.add(data);
       }
 
-      if (temp.length < response.total) {
-        var moreData = await _repository.getAllUser(pageCounter);
-        log('masuk');
-        for (var moreResults in moreData!.data) {
-          temp.add(moreResults);
+      if (temp.length < response.right.total) {
+        var someMoreData = await _repository.getAllUser(pageCounter);
+        for (var moreData in someMoreData.right.data) {
+          temp.add(moreData);
         }
       }
+
+      // for (var data in response.data) {
+      //   temp.add(data);
+      // }
+
+      // if (temp.length < response.total) {
+      //   var moreData = await _repository.getAllUser(pageCounter);
+      //   log('masuk');
+      //   for (var moreResults in moreData!.data) {
+      //     temp.add(moreResults);
+      //   }
+      // }
 
       return temp;
     } catch (e) {

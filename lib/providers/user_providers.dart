@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:either_dart/either.dart';
 import 'package:flutter_application_1/models/user_data_models.dart';
+import 'package:flutter_application_1/models/user_models.dart';
 
 class UserProvider {
   UserProvider._instance();
@@ -13,24 +17,22 @@ class UserProvider {
   Dio dio = Dio();
   final String baseUrl = 'https://reqres.in/api/users';
 
-  Future<UsersPage?> getAllUsers(int page) async {
+  Future<Either<String, UsersPage>> getAllUsers(int page) async {
     try {
-      var response = await dio.get(baseUrl, queryParameters: {'page': page});
+      var response = await dio.get(
+        baseUrl,
+        queryParameters: {'page': page},
+      );
 
       if (response.statusCode != 200) {
-        throw Exception('Failed to fetch Data');
+        throw Exception('Failed to fetch Data, no data found');
       }
 
-      return UsersPage.fromJson(response.data);
+      UsersPage usersPage = UsersPage.fromJson(response.data);
 
-      // for (var data in response.data['data']) {
-      //   UserModels models = UserModels.fromJson(data);
-      //   temp.add(models);
-      // }
-
-      // return temp;
-    } catch (e) {
-      return null;
+      return Right(usersPage);
+    } on Exception catch (e) {
+      return Left(e.toString());
     }
   }
 }
